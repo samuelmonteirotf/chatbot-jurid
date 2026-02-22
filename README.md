@@ -1,10 +1,10 @@
-# Chatbot JurID ⚖️🤖
+# Chatbot JurID ⚖️
 
 **Assistente virtual jurídico especializado em Certificados Digitais (A1, A3, Nuvem)**
 
 Chatbot full-stack para triagem e suporte técnico de advogados brasileiros na emissão e instalação de e-CPF, e-CNPJ e certificados Vidaas.
 
-## 🎨 Interface Premium SaaS 2026
+## Interface Premium SaaS 2026
 - Tema indigo/blue dark/light mode automático  
 - Animações suaves com Vue `<TransitionGroup>`  
 - Histórico de conversas (salvo no navegador)  
@@ -12,7 +12,7 @@ Chatbot full-stack para triagem e suporte técnico de advogados brasileiros na e
 - Botão “Copiar resposta” com 1 clique  
 - Loading animado + bolhas modernas
 
-## 📸 Screenshots
+## Screenshots
 <div align="center">
   <img src="./image-1.png" alt="Interface Principal" width="800">
 </div>
