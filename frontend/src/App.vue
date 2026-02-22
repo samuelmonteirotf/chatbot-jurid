@@ -1,18 +1,18 @@
 <template>
   <div :class="{ 'dark': isDarkMode }" class="min-h-screen transition-colors duration-300">
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300 flex flex-col">
       <!-- Header -->
-      <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header class="bg-white dark:bg-slate-900 shadow-sm border-b border-gray-200 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+            <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/30">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
               </svg>
             </div>
             <div>
-              <h1 class="text-xl font-semibold text-gray-900 dark:text-white">ChatBot IA</h1>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Certificados Digitais</p>
+              <h1 class="text-xl font-bold tracking-tight text-gray-900 dark:text-gray-50">Chatbot JurID</h1>
+              <p class="text-sm font-medium text-indigo-600 dark:text-indigo-400">Assistente Jurídico com Certificado Digital</p>
             </div>
           </div>
           
@@ -35,6 +35,15 @@
               </span>
             </div>
             
+            <button 
+              @click="exportConversation"
+              class="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors duration-200"
+              title="Exportar conversa"
+            >
+              <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </button>
             <button 
               @click="toggleTheme"
               class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
@@ -194,30 +203,53 @@
                 </div>
 
                 <!-- Messages -->
-                <div 
-                  v-for="message in messages" 
-                  :key="message.id"
-                  :class="message.sender === 'user' ? 'flex justify-end' : 'flex justify-start'"
-                >
+                <TransitionGroup name="list" tag="div" class="space-y-6">
                   <div 
-                    :class="[
-                      'max-w-xs lg:max-w-md px-4 py-2 rounded-lg',
-                      message.sender === 'user' 
-                        ? 'bg-blue-500 text-white rounded-br-none' 
-                        : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-bl-none'
-                    ]"
+                    v-for="message in messages" 
+                    :key="message.id"
+                    :class="message.sender === 'user' ? 'flex justify-end' : 'flex justify-start'"
+                    class="group relative print-message"
                   >
-                    <p class="text-sm whitespace-pre-line">{{ message.text }}</p>
-                    <div class="flex items-center justify-between mt-1">
-                      <span class="text-xs opacity-70">
-                        {{ formatTime(message.timestamp) }}
-                      </span>
-                      <span v-if="message.sender === 'ai' && message.confidence" class="text-xs opacity-70">
-                        {{ Math.round(message.confidence * 100) }}% confiança
-                      </span>
+                    <!-- AI Avatar -->
+                    <div v-if="message.sender === 'ai'" class="flex-shrink-0 mr-3 self-end mb-1">
+                      <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center border border-indigo-200 dark:border-indigo-800 shadow-sm">
+                        <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                      </div>
+                    </div>
+                
+                    <div 
+                      :class="[
+                        'max-w-[85%] lg:max-w-md px-5 py-3.5 rounded-2xl shadow-sm relative transition-all duration-200',
+                        message.sender === 'user' 
+                          ? 'bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-br-sm' 
+                          : 'bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 border border-gray-100 dark:border-slate-700 rounded-bl-sm'
+                      ]"
+                    >
+                      <p class="text-[0.95rem] whitespace-pre-line leading-relaxed">{{ message.text }}</p>
+                      
+                      <div class="flex items-center justify-between mt-2 pt-2 border-t" :class="message.sender === 'user' ? 'border-indigo-400/30' : 'border-gray-100 dark:border-slate-700'">
+                        <span class="text-[10px] font-medium tracking-wide opacity-70">
+                          {{ formatTime(message.timestamp) }}
+                        </span>
+                        
+                        <div class="flex items-center space-x-3">
+                          <span v-if="message.sender === 'ai' && message.confidence" class="text-[10px] font-medium tracking-wide text-green-500 dark:text-emerald-400">
+                            {{ Math.round(message.confidence * 100) }}% conf.
+                          </span>
+                          <!-- Copy button for AI messages -->
+                          <button 
+                            v-if="message.sender === 'ai'" 
+                            @click="copyText(message.text)" 
+                            class="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 -mr-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 no-print"
+                            title="Copiar resposta"
+                          >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </TransitionGroup>
 
                 <!-- Typing Indicator -->
                 <div v-if="isTyping" class="flex justify-start">
@@ -333,12 +365,20 @@
           </div>
         </main>
       </div>
+      <!-- Footer Branding -->
+      <footer class="mt-auto py-6 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 no-print">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            Desenvolvido por Samuel Monteiro Junior - LegalTech &copy; {{ new Date().getFullYear() }}
+          </p>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted, computed } from 'vue'
+import { ref, nextTick, onMounted, computed, watch } from 'vue'
 import { ChatService } from './services/chatService.js'
 
 // Reactive data
@@ -471,6 +511,40 @@ const handleScroll = () => {
   // Could add scroll-based features here
 }
 
+// Export conversation
+const exportConversation = () => {
+  if (messages.value.length === 0) return
+  let content = "Chatbot JurID - Histórico de Conversa\n\n"
+  messages.value.forEach(m => {
+    const time = new Date(m.timestamp).toLocaleString('pt-BR')
+    const sender = m.sender === 'user' ? 'Você' : 'Assistente'
+    content += `[${time}] ${sender}:\n${m.text}\n\n`
+  })
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `chatbot_jurid_${new Date().getTime()}.txt`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+// Copy text function
+const copyText = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch (err) {
+    console.error('Failed to copy text: ', err)
+  }
+}
+
+// Persist messages to LocalStorage
+watch(messages, (newVal) => {
+  localStorage.setItem('jurid_chat_history', JSON.stringify(newVal))
+}, { deep: true })
+
 // Adicione estas variáveis reativas após as existentes
 const sidebarOpen = ref(false)
 const searchQuery = ref('')
@@ -565,6 +639,20 @@ onMounted(async () => {
     // Check system preference
     isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
   }
+
+  // Load chat history
+  const savedHistory = localStorage.getItem('jurid_chat_history')
+  if (savedHistory) {
+    try {
+      messages.value = JSON.parse(savedHistory)
+      // Fix dates correctly after parse
+      messages.value.forEach(m => m.timestamp = new Date(m.timestamp))
+      await nextTick()
+      scrollToBottom()
+    } catch (e) {
+      console.error('Failed to load chat history', e)
+    }
+  }
   
   // Focus input
   if (messageInput.value) {
@@ -581,3 +669,15 @@ onMounted(async () => {
   setInterval(checkConnection, 30000) // Check every 30 seconds
 })
 </script>
+
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(15px) scale(0.98);
+}
+</style>
