@@ -14,7 +14,7 @@ Chatbot full-stack para triagem e suporte técnico de advogados brasileiros na e
 
 ## 📸 Screenshots
 <div align="center">
-  <img src="./image.png" alt="Interface Principal" width="800">
+  <img src="./image-1.png" alt="Interface Principal" width="800">
 </div>
 
 ## Tecnologias
