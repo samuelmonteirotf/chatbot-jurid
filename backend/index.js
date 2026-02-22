@@ -219,15 +219,19 @@ if (process.env.NODE_ENV === "production") {
 
 // --------------------- Inicialização ---------------------
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`)
-  console.log(`📚 Base de conhecimento carregada com ${knowledgeBase.length} itens`)
-  console.log(`🔗 Health check disponível em: http://localhost:${PORT}/api/health`)
-  console.log(`🤖 API do chatbot em: http://localhost:${PORT}/api/message`)
-  if (process.env.NODE_ENV === "production") {
-    console.log(`🌐 Frontend servido em: http://localhost:${PORT}`)
-  }
-})
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando na porta ${PORT}`)
+    console.log(`📚 Base de conhecimento carregada com ${knowledgeBase.length} itens`)
+    console.log(`🔗 Health check disponível em: http://localhost:${PORT}/api/health`)
+    console.log(`🤖 API do chatbot em: http://localhost:${PORT}/api/message`)
+    if (process.env.NODE_ENV === "production") {
+      console.log(`🌐 Frontend servido em: http://localhost:${PORT}`)
+    }
+  })
+}
+
+module.exports = app;
 
 // Graceful shutdown
 process.on("SIGTERM", () => {
