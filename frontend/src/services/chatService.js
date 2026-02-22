@@ -1,6 +1,6 @@
 class ChatService {
   constructor() {
-    this.baseURL = import.meta.env.PROD ? "" : "http://localhost:3001"
+    this.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "https://chatbot-jurid-production.up.railway.app" : "http://localhost:3001")
     this.apiURL = `${this.baseURL}/api`
   }
 
